@@ -297,7 +297,7 @@ const Login = () => {
               </p>
 
               <p className="mt-8 text-center text-[11px] uppercase tracking-[0.24em] text-slate-300 lg:text-left">
-                © 2026 All rights reserved
+                ï¿½ 2026 All rights reserved
               </p>
             </div>
           </section>
