@@ -5,7 +5,9 @@ import App from './App.jsx'
 import axios from "axios";
 import Cookies from "js-cookie";
 
-axios.defaults.baseURL = 'http://localhost:8000' // Set the base URL for all requests
+// axios.defaults.baseURL = 'http://localhost:8000' // Set the base URL for all requests
+axios.defaults.baseURL = 'https://ai-tutor-production-ae4c.up.railway.app' 
+
 
 const token = Cookies.get('token');
 
