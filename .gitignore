@@ -1,0 +1,64 @@
+# OS and editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment files
+.env
+.env.*
+*.local
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.python-version
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+backend/env/
+
+# Django / local database / uploads
+db.sqlite3
+*.sqlite3
+media/
+staticfiles/
+
+# Node / frontend build artifacts
+node_modules/
+frontned/node_modules/
+dist/
+dist-ssr/
+coverage/
+frontned/dist/
+frontned/dist-ssr/
+
+# Tool caches
+.cache/
+.parcel-cache/
+.eslintcache

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Today's Revision Plan</title>
+</head>
+<body style="margin:0;padding:0;background-color:#eef2f7;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#eef2f7;padding:40px 16px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:580px;">
+
+          <!-- Logo -->
+          <tr>
+            <td align="center" style="padding-bottom:28px;">
+              <span style="font-size:22px;font-weight:800;color:#4f46e5;letter-spacing:-0.5px;">📚 TutorApp</span>
+            </td>
+          </tr>
+
+          <!-- Main card -->
+          <tr>
+            <td style="background:#ffffff;border-radius:24px;box-shadow:0 8px 40px rgba(15,23,42,0.10);overflow:hidden;">
+              <table width="100%" cellpadding="0" cellspacing="0">
+
+                <!-- Gradient top bar -->
+                <tr>
+                  <td style="background:linear-gradient(90deg,#4f46e5 0%,#7c3aed 50%,#ec4899 100%);height:5px;font-size:5px;line-height:5px;">&nbsp;</td>
+                </tr>
+
+                <!-- Hero section -->
+                <tr>
+                  <td style="background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%);padding:36px 40px 28px;text-align:center;">
+                    <p style="margin:0 0 8px;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;color:#7c3aed;">Daily Revision</p>
+                    <h1 style="margin:0 0 10px;font-size:28px;font-weight:800;color:#1e1b4b;line-height:1.25;">
+                      Good day, {{ user.first_name }}! 🎯
+                    </h1>
+                    <p style="margin:0;font-size:15px;color:#6d28d9;line-height:1.6;">
+                      Your personalised revision schedule for today is ready.
+                    </p>
+                  </td>
+                </tr>
+
+                <!-- Motivational Quote -->
+                <tr>
+                  <td style="padding:24px 40px 0;">
+                    <table width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border-left:4px solid #6366f1;border-radius:0 12px 12px 0;">
+                      <tr>
+                        <td style="padding:16px 20px;">
+                          <p style="margin:0 0 6px;font-size:15px;font-style:italic;color:#334155;line-height:1.6;">
+                            "The secret of getting ahead is getting started."
+                          </p>
+                          <p style="margin:0;font-size:12px;font-weight:700;color:#6366f1;text-transform:uppercase;letter-spacing:0.08em;">— Mark Twain</p>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <tr>
+                  <td style="padding:24px 40px 32px;">
+
+                    <!-- Today's Revisions -->
+                    {% if today_revisions %}
+                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+                      <tr>
+                        <td style="padding-bottom:14px;">
+                          <span style="background:#fef9c3;border:1px solid #fde047;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;color:#854d0e;text-transform:uppercase;letter-spacing:0.1em;">📅 Due Today</span>
+                        </td>
+                      </tr>
+                      {% for revision in today_revisions %}
+                      <tr>
+                        <td style="padding-bottom:10px;">
+                          <table width="100%" cellpadding="0" cellspacing="0" style="background:#fffbeb;border:1px solid #fde68a;border-radius:16px;">
+                            <tr>
+                              <td style="padding:16px 20px;">
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                  <tr>
+                                    <td style="vertical-align:top;">
+                                      <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:#1c1917;">{{ revision.topic.title }}</p>
+                                      <p style="margin:0;font-size:12px;color:#92400e;">
+                                        <strong>{{ revision.topic.subject.name }}</strong> &nbsp;·&nbsp; Revision {{ revision.revision_number }} &nbsp;·&nbsp; {{ revision.scheduled_date }}
+                                      </p>
+                                    </td>
+                                    <td align="right" style="vertical-align:middle;padding-left:16px;white-space:nowrap;">
+                                      <a href="{{ frontend_url }}/topics?subjectId={{ revision.topic.subject.subject_id }}"
+                                         style="display:inline-block;background:#f59e0b;color:#ffffff;font-size:12px;font-weight:700;text-decoration:none;padding:8px 18px;border-radius:20px;">
+                                        Study Now →
+                                      </a>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </table>
+                    {% endif %}
+
+                    <!-- Overdue Revisions -->
+                    {% if pending_revisions %}
+                    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+                      <tr>
+                        <td style="padding-bottom:14px;">
+                          <span style="background:#fee2e2;border:1px solid #fca5a5;border-radius:20px;padding:5px 14px;font-size:12px;font-weight:700;color:#991b1b;text-transform:uppercase;letter-spacing:0.1em;">⚠️ Overdue</span>
+                        </td>
+                      </tr>
+                      {% for revision in pending_revisions %}
+                      <tr>
+                        <td style="padding-bottom:10px;">
+                          <table width="100%" cellpadding="0" cellspacing="0" style="background:#fff5f5;border:1px solid #fecaca;border-radius:16px;">
+                            <tr>
+                              <td style="padding:16px 20px;">
+                                <table width="100%" cellpadding="0" cellspacing="0">
+                                  <tr>
+                                    <td style="vertical-align:top;">
+                                      <p style="margin:0 0 4px;font-size:15px;font-weight:700;color:#1c1917;">{{ revision.topic.title }}</p>
+                                      <p style="margin:0;font-size:12px;color:#991b1b;">
+                                        <strong>{{ revision.topic.subject.name }}</strong> &nbsp;·&nbsp; Revision {{ revision.revision_number }} &nbsp;·&nbsp; Was due {{ revision.scheduled_date }}
+                                      </p>
+                                    </td>
+                                    <td align="right" style="vertical-align:middle;padding-left:16px;white-space:nowrap;">
+                                      <a href="{{ frontend_url }}/topics?subjectId={{ revision.topic.subject.subject_id }}"
+                                         style="display:inline-block;background:#ef4444;color:#ffffff;font-size:12px;font-weight:700;text-decoration:none;padding:8px 18px;border-radius:20px;">
+                                        Catch Up →
+                                      </a>
+                                    </td>
+                                  </tr>
+                                </table>
+                              </td>
+                            </tr>
+                          </table>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    </table>
+                    {% endif %}
+
+                    <!-- CTA Banner -->
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" style="background:linear-gradient(135deg,#4f46e5,#7c3aed);border-radius:18px;padding:28px 24px;">
+                          <p style="margin:0 0 6px;font-size:13px;font-weight:600;color:rgba(255,255,255,0.75);text-transform:uppercase;letter-spacing:0.1em;">Your Learning Hub</p>
+                          <p style="margin:0 0 20px;font-size:18px;font-weight:700;color:#ffffff;line-height:1.4;">
+                            Open your dashboard to track all revisions in one place.
+                          </p>
+                          <a href="{{ frontend_url }}/dashboard"
+                             style="display:inline-block;background:#ffffff;color:#4f46e5;font-size:14px;font-weight:800;text-decoration:none;padding:13px 36px;border-radius:50px;letter-spacing:0.02em;">
+                            Go to Dashboard →
+                          </a>
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+
+                <!-- Footer -->
+                <tr>
+                  <td style="background:#f8fafc;border-top:1px solid #e2e8f0;padding:22px 40px;border-radius:0 0 24px 24px;">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td>
+                          <p style="margin:0 0 4px;font-size:12px;color:#94a3b8;line-height:1.6;">
+                            Spaced repetition: <strong style="color:#64748b;">+1 · +7 · +20 · +35 days</strong>
+                          </p>
+                          <p style="margin:0;font-size:12px;color:#94a3b8;">You're receiving this because you have revisions due on TutorApp.</p>
+                        </td>
+                        <td align="right" style="white-space:nowrap;padding-left:16px;vertical-align:top;">
+                          <a href="{{ frontend_url }}/dashboard" style="font-size:12px;color:#6366f1;text-decoration:none;font-weight:600;">Dashboard</a>
+                          &nbsp;&nbsp;
+                          <a href="{{ frontend_url }}/subjects" style="font-size:12px;color:#6366f1;text-decoration:none;font-weight:600;">Subjects</a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+
+          <!-- Bottom caption -->
+          <tr>
+            <td align="center" style="padding-top:24px;">
+              <p style="margin:0;font-size:12px;color:#94a3b8;">© 2026 TutorApp &nbsp;·&nbsp; Built for focused learners</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

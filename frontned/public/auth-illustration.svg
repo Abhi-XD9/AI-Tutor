@@ -1,0 +1,139 @@
+<svg width="1200" height="1400" viewBox="0 0 1200 1400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="1400" fill="#08131F"/>
+  <rect width="1200" height="1400" fill="url(#bgGlow)"/>
+  <circle cx="188" cy="244" r="170" fill="url(#orbWarm)" fill-opacity="0.95"/>
+  <circle cx="996" cy="210" r="126" fill="url(#orbCool)" fill-opacity="0.9"/>
+  <circle cx="928" cy="1110" r="214" fill="url(#orbPink)" fill-opacity="0.9"/>
+  <circle cx="240" cy="1086" r="152" fill="url(#orbBlue)" fill-opacity="0.78"/>
+  <path d="M0 980C133 894 247 864 367 866C533 869 652 1000 830 980C979 964 1092 871 1200 770V1400H0V980Z" fill="url(#floorFade)"/>
+
+  <g filter="url(#shadowSoft)">
+    <rect x="286" y="258" width="628" height="494" rx="34" fill="#F7FBFF"/>
+    <rect x="314" y="288" width="572" height="378" rx="26" fill="url(#screenFill)"/>
+    <rect x="484" y="678" width="234" height="28" rx="14" fill="#D0DCE8"/>
+    <path d="M411 733H789C803 733 812 748 806 761L782 809C777 819 767 826 756 826H444C433 826 423 819 418 809L394 761C388 748 397 733 411 733Z" fill="#DCE8F3"/>
+  </g>
+
+  <g filter="url(#shadowCard)">
+    <rect x="360" y="334" width="478" height="284" rx="28" fill="#0F2235"/>
+    <rect x="390" y="370" width="210" height="118" rx="22" fill="url(#lessonCard)"/>
+    <circle cx="450" cy="430" r="32" fill="#F8FBFF" fill-opacity="0.28"/>
+    <path d="M441 415L468 431L441 447V415Z" fill="#FFFFFF"/>
+    <rect x="625" y="376" width="168" height="20" rx="10" fill="#ECF5FF" fill-opacity="0.94"/>
+    <rect x="625" y="412" width="128" height="16" rx="8" fill="#C4D6E9"/>
+    <rect x="625" y="447" width="145" height="16" rx="8" fill="#C4D6E9"/>
+    <rect x="390" y="525" width="403" height="14" rx="7" fill="#29445E"/>
+    <rect x="390" y="553" width="312" height="14" rx="7" fill="#29445E"/>
+  </g>
+
+  <g filter="url(#shadowCard)">
+    <rect x="221" y="872" width="290" height="252" rx="30" fill="#F7FBFF" fill-opacity="0.98"/>
+    <rect x="255" y="916" width="100" height="100" rx="24" fill="url(#bookCover)"/>
+    <path d="M292 943C313 932 339 936 357 952V1022C339 1008 313 1005 292 1015C276 1023 264 1034 255 1048V978C264 964 276 951 292 943Z" fill="#FFFFFF" fill-opacity="0.88"/>
+    <rect x="381" y="930" width="92" height="14" rx="7" fill="#14283A"/>
+    <rect x="381" y="960" width="72" height="12" rx="6" fill="#8FA6BB"/>
+    <rect x="255" y="1050" width="218" height="12" rx="6" fill="#D0DCE8"/>
+    <rect x="255" y="1080" width="170" height="12" rx="6" fill="#D0DCE8"/>
+  </g>
+
+  <g filter="url(#shadowCard)">
+    <rect x="744" y="824" width="246" height="280" rx="30" fill="#FFF7F2"/>
+    <circle cx="867" cy="930" r="74" fill="url(#mentorOrb)"/>
+    <path d="M867 876C886 876 901 891 901 910C901 929 886 944 867 944C848 944 833 929 833 910C833 891 848 876 867 876Z" fill="#173B56"/>
+    <path d="M811 1009C823 970 860 943 902 943C944 943 981 970 993 1009V1034H811V1009Z" fill="#173B56"/>
+    <rect x="788" y="1057" width="158" height="12" rx="6" fill="#D9C8BE"/>
+    <rect x="788" y="1084" width="124" height="12" rx="6" fill="#D9C8BE"/>
+  </g>
+
+  <g filter="url(#shadowFloat)">
+    <rect x="828" y="352" width="184" height="138" rx="26" fill="#FFFFFF" fill-opacity="0.96"/>
+    <rect x="860" y="388" width="60" height="60" rx="18" fill="url(#chartTile)"/>
+    <path d="M878 429L895 409L908 421L925 398" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="942" y="394" width="40" height="12" rx="6" fill="#183243"/>
+    <rect x="942" y="420" width="30" height="10" rx="5" fill="#A7B8C7"/>
+  </g>
+
+  <g filter="url(#shadowFloat)">
+    <rect x="159" y="402" width="142" height="142" rx="28" fill="#FFFFFF" fill-opacity="0.95"/>
+    <circle cx="230" cy="473" r="38" fill="url(#badgeCircle)"/>
+    <path d="M219 473L228 482L244 463" stroke="#FFFFFF" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <defs>
+    <linearGradient id="bgGlow" x1="166" y1="104" x2="1000" y2="1287" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#122438"/>
+      <stop offset="1" stop-color="#08131F"/>
+    </linearGradient>
+    <linearGradient id="orbWarm" x1="63" y1="122" x2="315" y2="392" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB76C"/>
+      <stop offset="1" stop-color="#FF6B47"/>
+    </linearGradient>
+    <linearGradient id="orbCool" x1="902" y1="112" x2="1084" y2="305" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7BD6FF"/>
+      <stop offset="1" stop-color="#4F7CFF"/>
+    </linearGradient>
+    <linearGradient id="orbPink" x1="785" y1="935" x2="1059" y2="1238" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFB1AE"/>
+      <stop offset="1" stop-color="#FF6D8E"/>
+    </linearGradient>
+    <linearGradient id="orbBlue" x1="122" y1="942" x2="332" y2="1219" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#85E2FF"/>
+      <stop offset="1" stop-color="#4476FF"/>
+    </linearGradient>
+    <linearGradient id="floorFade" x1="600" y1="840" x2="600" y2="1400" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#08131F" stop-opacity="0"/>
+      <stop offset="1" stop-color="#060E16"/>
+    </linearGradient>
+    <linearGradient id="screenFill" x1="351" y1="309" x2="849" y2="645" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#EEF7FF"/>
+      <stop offset="1" stop-color="#D8E9F8"/>
+    </linearGradient>
+    <linearGradient id="lessonCard" x1="390" y1="370" x2="600" y2="488" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FF8D5B"/>
+      <stop offset="1" stop-color="#FF5E7B"/>
+    </linearGradient>
+    <linearGradient id="bookCover" x1="255" y1="916" x2="355" y2="1016" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#54B6FF"/>
+      <stop offset="1" stop-color="#2D66F6"/>
+    </linearGradient>
+    <linearGradient id="mentorOrb" x1="818" y1="875" x2="922" y2="986" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFD68F"/>
+      <stop offset="1" stop-color="#FF9C5B"/>
+    </linearGradient>
+    <linearGradient id="chartTile" x1="860" y1="388" x2="920" y2="448" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#8DDEFF"/>
+      <stop offset="1" stop-color="#4A72FF"/>
+    </linearGradient>
+    <linearGradient id="badgeCircle" x1="197" y1="438" x2="259" y2="506" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#5EDB9E"/>
+      <stop offset="1" stop-color="#159A5B"/>
+    </linearGradient>
+    <filter id="shadowSoft" x="226" y="222" width="748" height="664" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="28"/>
+      <feGaussianBlur stdDeviation="30"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0156863 0 0 0 0 0.0980392 0 0 0 0 0.180392 0 0 0 0.18 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_1" result="shape"/>
+    </filter>
+    <filter id="shadowCard" x="181" y="314" width="869" height="870" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="20"/>
+      <feGaussianBlur stdDeviation="20"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0117647 0 0 0 0 0.0784314 0 0 0 0 0.141176 0 0 0 0.16 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_1" result="shape"/>
+    </filter>
+    <filter id="shadowFloat" x="119" y="328" width="933" height="290" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+      <feOffset dy="18"/>
+      <feGaussianBlur stdDeviation="20"/>
+      <feColorMatrix type="matrix" values="0 0 0 0 0.0117647 0 0 0 0 0.0784314 0 0 0 0 0.141176 0 0 0 0.14 0"/>
+      <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_1"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_1" result="shape"/>
+    </filter>
+  </defs>
+</svg>
