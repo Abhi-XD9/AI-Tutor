@@ -9,6 +9,8 @@ import Cookies from 'js-cookie'
 const inputClassName =
   'mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-slate-500 focus:bg-white focus:ring-4 focus:ring-slate-200'
 
+const passwordInputClassName = `${inputClassName} pr-12`
+
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
     <path
@@ -38,6 +40,14 @@ const FacebookIcon = () => (
 
 const FieldError = ({ message }) =>
   message ? <p className="mt-2 text-xs font-medium text-rose-500">{message}</p> : null
+
+const EyeIcon = ({ open }) => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z" />
+    <circle cx="12" cy="12" r="3" />
+    {!open && <path d="M4 4l16 16" />}
+  </svg>
+)
 
 const SocialButton = ({ icon, label }) => (
   <button
@@ -129,6 +139,7 @@ const Login = () => {
     message: '',
     redirectTo: '',
   })
+  const [showPassword, setShowPassword] = useState(false)
 
   const navigate = useNavigate()
 
@@ -253,19 +264,29 @@ const Login = () => {
                       Forgot Password?
                     </button>
                   </div>
-                  <input
-                    id="password"
-                    type="password"
-                    placeholder="At least 8 characters"
-                    className={inputClassName}
-                    {...register('password', {
-                      required: 'Password is required',
-                      minLength: {
-                        value: 8,
-                        message: 'Password must be at least 8 characters',
-                      },
-                    })}
-                  />
+                  <div className="relative mt-2">
+                    <input
+                      id="password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="At least 8 characters"
+                      className={passwordInputClassName}
+                      {...register('password', {
+                        required: 'Password is required',
+                        minLength: {
+                          value: 8,
+                          message: 'Password must be at least 8 characters',
+                        },
+                      })}
+                    />
+                    <button
+                      type="button"
+                      aria-label={showPassword ? 'Hide password' : 'Show password'}
+                      onClick={() => setShowPassword((value) => !value)}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                    >
+                      <EyeIcon open={showPassword} />
+                    </button>
+                  </div>
                   <FieldError message={errors.password?.message} />
                 </div>
 
@@ -310,4 +331,3 @@ const Login = () => {
 }
 
 export default Login
-

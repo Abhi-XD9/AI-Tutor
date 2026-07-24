@@ -401,7 +401,7 @@ const Subjects = () => {
                       </button>
                     </div>
                   ) : (
-                    <button onClick={() => navigate(`/topics?subjectId=${subject.subject_id}`)}
+                    <button onClick={() => navigate(`/subjects/topics?subjectId=${subject.subject_id}`)}
                       className="mt-5 flex w-full items-center justify-center rounded-xl border border-slate-100 bg-black text-white py-2 text-sm font-semibold text-slate-600 transition hover:bg-black/60 hover:cursor-pointer">
                       View topics
                     </button>

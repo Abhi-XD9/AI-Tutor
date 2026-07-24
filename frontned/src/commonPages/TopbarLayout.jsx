@@ -112,7 +112,7 @@ const TopbarLayout = () => {
                     key={item.path}
                     href={item.path}
                     className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all ${
-                      location.pathname === item.path
+                      location.pathname.startsWith(item.path)
                         ? 'bg-[#1d7bff] text-white shadow-lg shadow-blue-200'
                         : 'text-slate-600 hover:text-[#1d7bff] hover:bg-white/40'
                     }`}

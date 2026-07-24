@@ -8,6 +8,8 @@ import axios from 'axios'
 const inputClassName =
   'mt-2 w-full rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-slate-500 focus:bg-white focus:ring-4 focus:ring-slate-200'
 
+const passwordInputClassName = `${inputClassName} pr-12`
+
 const GoogleIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5">
     <path
@@ -37,6 +39,14 @@ const FacebookIcon = () => (
 
 const FieldError = ({ message }) =>
   message ? <p className="mt-2 text-xs font-medium text-rose-500">{message}</p> : null
+
+const EyeIcon = ({ open }) => (
+  <svg viewBox="0 0 24 24" aria-hidden="true" className="h-5 w-5" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6-10-6-10-6Z" />
+    <circle cx="12" cy="12" r="3" />
+    {!open && <path d="M4 4l16 16" />}
+  </svg>
+)
 
 const SocialButton = ({ icon, label }) => (
   <button
@@ -134,6 +144,8 @@ const Register = () => {
     message: '',
     redirectTo: '',
   })
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const navigate = useNavigate()
 
@@ -296,19 +308,29 @@ const Register = () => {
                     <label htmlFor="password" className="text-sm font-medium text-slate-700">
                       Password
                     </label>
-                    <input
-                      id="password"
-                      type="password"
-                      placeholder="At least 8 characters"
-                      className={inputClassName}
-                      {...register('password', {
-                        required: 'Password is required',
-                        minLength: {
-                          value: 8,
-                          message: 'Password must be at least 8 characters',
-                        },
-                      })}
-                    />
+                    <div className="relative mt-2">
+                      <input
+                        id="password"
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder="At least 8 characters"
+                        className={passwordInputClassName}
+                        {...register('password', {
+                          required: 'Password is required',
+                          minLength: {
+                            value: 8,
+                            message: 'Password must be at least 8 characters',
+                          },
+                        })}
+                      />
+                      <button
+                        type="button"
+                        aria-label={showPassword ? 'Hide password' : 'Show password'}
+                        onClick={() => setShowPassword((value) => !value)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                      >
+                        <EyeIcon open={showPassword} />
+                      </button>
+                    </div>
                     <FieldError message={errors.password?.message} />
                   </div>
 
@@ -316,17 +338,27 @@ const Register = () => {
                     <label htmlFor="confirmPassword" className="text-sm font-medium text-slate-700">
                       Confirm Password
                     </label>
-                    <input
-                      id="confirmPassword"
-                      type="password"
-                      placeholder="Repeat password"
-                      className={inputClassName}
-                      {...register('confirmPassword', {
-                        required: 'Please confirm your password',
-                        validate: (value) =>
-                          value === getValues('password') || 'Passwords do not match',
-                      })}
-                    />
+                    <div className="relative mt-2">
+                      <input
+                        id="confirmPassword"
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        placeholder="Repeat password"
+                        className={passwordInputClassName}
+                        {...register('confirmPassword', {
+                          required: 'Please confirm your password',
+                          validate: (value) =>
+                            value === getValues('password') || 'Passwords do not match',
+                        })}
+                      />
+                      <button
+                        type="button"
+                        aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+                        onClick={() => setShowConfirmPassword((value) => !value)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 transition hover:text-slate-600"
+                      >
+                        <EyeIcon open={showConfirmPassword} />
+                      </button>
+                    </div>
                     <FieldError message={errors.confirmPassword?.message} />
                   </div>
                 </div>
@@ -352,16 +384,16 @@ const Register = () => {
                 </button>
               </form>
 
-              <div className="mt-7 flex items-center gap-4">
+              {/* <div className="mt-7 flex items-center gap-4">
                 <div className="h-px flex-1 bg-slate-200" />
                 <span className="text-xs text-slate-400">Or</span>
                 <div className="h-px flex-1 bg-slate-200" />
-              </div>
+              </div> */}
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-2">
+              {/* <div className="mt-6 grid gap-3 sm:grid-cols-2">
                 <SocialButton icon={<GoogleIcon />} label="Sign up with Google" />
                 <SocialButton icon={<FacebookIcon />} label="Sign up with Facebook" />
-              </div>
+              </div> */}
 
               <p className="mt-7 text-sm text-slate-500">
                 Already have an account?{' '}
@@ -384,4 +416,3 @@ const Register = () => {
 }
 
 export default Register
-

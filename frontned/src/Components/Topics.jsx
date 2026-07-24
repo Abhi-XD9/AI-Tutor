@@ -4,6 +4,7 @@ import axios from 'axios'
 import Cookies from 'js-cookie'
 
 const TOPICS_URL = '/api/V1/topics/'
+const SUBJECTS_URL = '/api/V1/subjects/'
 const authHeader = () => ({ Authorization: `Bearer ${Cookies.get('token')}` })
 
 const difficultyConfig = {
@@ -12,7 +13,106 @@ const difficultyConfig = {
   hard: { label: 'Hard', color: 'bg-rose-100 text-rose-700' },
 }
 
-const emptyForm = { title: '', description: '', difficulty: 'easy', estimated_time: 30 }
+const inputCls = 'w-full rounded-xl border border-slate-200 px-4 py-2.5 text-sm text-slate-800 outline-none transition focus:border-[#1d7bff]'
+const emptyCreateForm = { subject: '', title: '', description: '', difficulty: 'easy', estimated_time: 30 }
+
+const parseError = (error) => {
+  const data = error?.response?.data
+  if (!data) return 'Something went wrong.'
+  if (typeof data === 'object') return Object.values(data).flat().filter(Boolean).join(' ')
+  return 'Something went wrong.'
+}
+
+const AddTopicModal = ({ form, subjects, lockedSubjectId, submitting, error, onChange, onClose, onSubmit }) => {
+  const selectedSubject = subjects.find((subject) => String(subject.subject_id) === String(form.subject))
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/40 px-4 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-[1.75rem] bg-white p-6 shadow-[0_30px_80px_rgba(15,23,42,0.2)]">
+        <h3 className="mb-5 text-lg font-semibold text-slate-900">Add Topic</h3>
+        {error && <p className="mb-4 rounded-xl bg-rose-50 px-4 py-2 text-sm text-rose-600">{error}</p>}
+        <div className="space-y-4">
+          {lockedSubjectId ? (
+            <div>
+              <label className="mb-1 block text-xs font-semibold text-slate-500">Subject</label>
+              <div className="rounded-xl border border-slate-200 bg-slate-50 px-4 py-2.5 text-sm font-medium text-slate-700">
+                {selectedSubject?.name || `Subject ${lockedSubjectId}`}
+              </div>
+            </div>
+          ) : (
+            <div>
+              <label className="mb-1 block text-xs font-semibold text-slate-500">Subject</label>
+              <select name="subject" value={form.subject} onChange={onChange} className={inputCls}>
+                <option value="">Select Subject</option>
+                {subjects.map((subject) => (
+                  <option key={subject.subject_id} value={subject.subject_id}>
+                    {subject.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
+          <div>
+            <label className="mb-1 block text-xs font-semibold text-slate-500">Title</label>
+            <input name="title" value={form.title} onChange={onChange} className={inputCls} />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-xs font-semibold text-slate-500">Description</label>
+            <textarea
+              name="description"
+              rows={3}
+              value={form.description}
+              onChange={onChange}
+              className={inputCls}
+            />
+          </div>
+
+          <div className="flex gap-3">
+            <div className="flex-1">
+              <label className="mb-1 block text-xs font-semibold text-slate-500">Difficulty</label>
+              <select name="difficulty" value={form.difficulty} onChange={onChange} className={inputCls}>
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+              </select>
+            </div>
+            <div className="flex-1">
+              <label className="mb-1 block text-xs font-semibold text-slate-500">Est. Time (min)</label>
+              <input
+                name="estimated_time"
+                type="number"
+                min={1}
+                value={form.estimated_time}
+                onChange={onChange}
+                className={inputCls}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-6 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="rounded-xl border border-slate-200 px-5 py-2.5 text-sm font-semibold text-slate-600 transition hover:bg-slate-50"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={onSubmit}
+            disabled={submitting}
+            className="rounded-xl bg-[#1d7bff] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
+          >
+            {submitting ? 'Saving...' : 'Add Topic'}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 const EditModal = ({ topic, onClose, onSaved }) => {
   const [form, setForm] = useState({
@@ -93,7 +193,7 @@ const EditModal = ({ topic, onClose, onSaved }) => {
             </button>
             <button type="submit" disabled={saving}
               className="rounded-xl bg-[#1d7bff] px-5 py-2.5 text-sm font-semibold text-white hover:bg-blue-700 transition disabled:opacity-60">
-              {saving ? 'Saving…' : 'Save'}
+              {saving ? 'Saving...' : 'Save'}
             </button>
           </div>
         </form>
@@ -142,7 +242,7 @@ const MarkCompleteModal = ({ topic, onClose, onMarked }) => {
           </button>
           <button type="button" onClick={handleConfirm} disabled={loading}
             className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-700 transition disabled:opacity-60">
-            {loading ? 'Marking…' : 'Yes, Mark Completed'}
+            {loading ? 'Marking...' : 'Yes, Mark Completed'}
           </button>
         </div>
       </div>
@@ -177,7 +277,7 @@ const DeleteModal = ({ topic, onClose, onDeleted }) => {
           </button>
           <button type="button" onClick={handleDelete} disabled={deleting}
             className="rounded-xl bg-rose-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-rose-700 transition disabled:opacity-60">
-            {deleting ? 'Deleting…' : 'Delete'}
+            {deleting ? 'Deleting...' : 'Delete'}
           </button>
         </div>
       </div>
@@ -187,29 +287,89 @@ const DeleteModal = ({ topic, onClose, onDeleted }) => {
 
 const Topics = () => {
   const [topics, setTopics] = useState([])
+  const [subjects, setSubjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [editTopic, setEditTopic] = useState(null)
   const [deleteTopic, setDeleteTopic] = useState(null)
   const [completeTopic, setCompleteTopic] = useState(null)
+  const [isAddOpen, setIsAddOpen] = useState(false)
+  const [createForm, setCreateForm] = useState(emptyCreateForm)
+  const [createError, setCreateError] = useState(null)
+  const [creating, setCreating] = useState(false)
   const location = useLocation()
   const subjectId = new URLSearchParams(location.search).get('subjectId')
+  const selectedSubject = subjects.find((subject) => String(subject.subject_id) === String(subjectId))
 
   useEffect(() => {
-    const fetchTopics = async () => {
+    const fetchData = async () => {
       setLoading(true)
+      setError(null)
       try {
-        const res = await axios.get(TOPICS_URL, { headers: authHeader() })
-        const allTopics = res.data
-        setTopics(subjectId ? allTopics.filter((t) => String(t.subject) === subjectId) : allTopics)
+        const [topicsRes, subjectsRes] = await Promise.all([
+          axios.get(TOPICS_URL, { headers: authHeader() }),
+          axios.get(SUBJECTS_URL, { headers: authHeader() }),
+        ])
+        const allTopics = topicsRes.data
+        setSubjects(subjectsRes.data)
+        setTopics(subjectId ? allTopics.filter((topic) => String(topic.subject) === subjectId) : allTopics)
       } catch {
         setError('Failed to load topics.')
       } finally {
         setLoading(false)
       }
     }
-    fetchTopics()
+
+    fetchData()
   }, [subjectId])
+
+  const openAddModal = () => {
+    setCreateError(null)
+    setCreateForm({ ...emptyCreateForm, subject: subjectId || '' })
+    setIsAddOpen(true)
+  }
+
+  const closeAddModal = () => {
+    setIsAddOpen(false)
+    setCreateError(null)
+    setCreateForm(emptyCreateForm)
+  }
+
+  const handleCreateChange = (e) => {
+    const { name, value } = e.target
+    setCreateForm((current) => ({
+      ...current,
+      [name]: name === 'estimated_time' ? Number(value) : value,
+    }))
+  }
+
+  const handleCreateTopic = async () => {
+    if (!createForm.subject) {
+      setCreateError('Please select a subject.')
+      return
+    }
+    if (!createForm.title.trim()) {
+      setCreateError('Please enter a topic title.')
+      return
+    }
+
+    setCreating(true)
+    setCreateError(null)
+    try {
+      const res = await axios.post(TOPICS_URL, createForm, { headers: authHeader() })
+      const createdTopic = res.data
+      setTopics((current) => (
+        !subjectId || String(createdTopic.subject) === subjectId
+          ? [createdTopic, ...current]
+          : current
+      ))
+      closeAddModal()
+    } catch (err) {
+      setCreateError(parseError(err))
+    } finally {
+      setCreating(false)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[linear-gradient(180deg,#f5f9fd_0%,#edf4fb_100%)] p-6">
@@ -217,12 +377,22 @@ const Topics = () => {
         <div>
           <h2 className="text-3xl font-semibold text-slate-900">Topics</h2>
           <p className="mt-2 text-sm text-slate-500">
-            {subjectId ? `Showing topics for subject ${subjectId}` : 'Browse all topics.'}
+            {subjectId ? `Showing topics for ${selectedSubject?.name || `subject ${subjectId}`}.` : 'Browse all topics.'}
           </p>
         </div>
-        <Link to="/subjects" className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
-          Back to subjects
-        </Link>
+        <div className="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            onClick={openAddModal}
+            disabled={!subjects.length}
+            className="inline-flex items-center justify-center rounded-xl bg-[#1d7bff] px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Add Topic
+          </button>
+          <Link to="/subjects" className="inline-flex items-center justify-center rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-100">
+            Back to subjects
+          </Link>
+        </div>
       </div>
 
       {loading ? (
@@ -234,7 +404,15 @@ const Topics = () => {
       ) : !topics.length ? (
         <div className="rounded-3xl border border-slate-200 bg-white p-10 text-center text-slate-500">
           <p className="text-lg font-semibold text-slate-900">No topics found.</p>
-          <p className="mt-2 text-sm">Add a topic from a subject card.</p>
+          <p className="mt-2 text-sm">Create your first topic from here.</p>
+          <button
+            type="button"
+            onClick={openAddModal}
+            disabled={!subjects.length}
+            className="mt-5 inline-flex items-center justify-center rounded-xl bg-[#1d7bff] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            Add Topic
+          </button>
         </div>
       ) : (
         <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
@@ -246,23 +424,20 @@ const Topics = () => {
                   <p className="mt-2 text-sm text-slate-500">{topic.description || 'No description'}</p>
                 </div>
                 <div className="flex shrink-0 items-center gap-1">
-                  
-                    <button
-                      onClick={() => setCompleteTopic(topic)}
-                      disabled={topic.status == 'completed'}
-                      style={
-                        {
-                          cursor: topic.status == 'completed' ? 'not-allowed' : 'pointer'
-                        }
-                      }
-                      className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-500 transition hover:bg-emerald-100"
-                      title="Mark as completed"
-                    >
-                      <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
-                        <polyline points="20 6 9 17 4 12" />
-                      </svg>
-                    </button>
-                  
+                  <button
+                    onClick={() => setCompleteTopic(topic)}
+                    disabled={topic.status === 'completed'}
+                    style={{
+                      cursor: topic.status === 'completed' ? 'not-allowed' : 'pointer',
+                    }}
+                    className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-500 transition hover:bg-emerald-100"
+                    title="Mark as completed"
+                  >
+                    <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </button>
+
                   <button
                     onClick={() => setEditTopic(topic)}
                     className="flex h-8 w-8 items-center justify-center rounded-xl bg-blue-50 text-[#1d7bff] transition hover:bg-blue-100"
@@ -299,6 +474,19 @@ const Topics = () => {
             </div>
           ))}
         </div>
+      )}
+
+      {isAddOpen && (
+        <AddTopicModal
+          form={createForm}
+          subjects={subjects}
+          lockedSubjectId={subjectId}
+          submitting={creating}
+          error={createError}
+          onChange={handleCreateChange}
+          onClose={closeAddModal}
+          onSubmit={handleCreateTopic}
+        />
       )}
 
       {editTopic && (

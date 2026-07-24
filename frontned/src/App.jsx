@@ -20,7 +20,7 @@ function App() {
           <Route element={<TopbarLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/subjects" element={<Subjects />} />
-            <Route path = '/topics' element = {<Topics/>}/>
+            <Route path = 'subjects/topics' element = {<Topics/>}/>
           </Route>
         </Route>
       </Routes>
