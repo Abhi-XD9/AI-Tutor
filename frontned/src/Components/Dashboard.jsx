@@ -95,6 +95,7 @@ const getSubjectDueDate = (revisions) => {
   if (pendingDates.length > 0) return pendingDates[0]
 
   const allDates = revisions.map((revision) => revision.scheduled_date).sort()
+  
   return allDates[0] || '--'
 }
 
