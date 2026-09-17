@@ -62,3 +62,5 @@ frontned/dist-ssr/
 .cache/
 .parcel-cache/
 .eslintcache
+
+.claude/settings.local.json

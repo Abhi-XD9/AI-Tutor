@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from decouple import config, Csv
 from pathlib import Path
-import dj_database_url
+# import dj_database_url
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,6 +38,7 @@ ALLOWED_HOSTS = config(
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'channels',
     'users',
     'rest_framework_simplejwt',
     'subjects',
@@ -84,6 +86,13 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = "config.asgi.application"
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer",
+    },
+}
 
 
 # Database
@@ -91,15 +100,15 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 
 DATABASES = {
-     "default": dj_database_url.config()
-    # "default": {
-    #     "ENGINE": "django.db.backends.postgresql",
-    #     "NAME": config("DB_NAME"),
-    #     "USER": config("DB_USER"),
-    #     "PASSWORD": config("DB_PASSWORD"),
-    #     "HOST": config("DB_HOST", default="tutor-db"),
-    #     "PORT": config("DB_PORT", default="5432"),
-    # }
+    #  "default": dj_database_url.config()
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": config("DB_NAME"),
+        "USER": config("DB_USER"),
+        "PASSWORD": config("DB_PASSWORD"),
+        "HOST": config("DB_HOST", default="tutor-db"),
+        "PORT": config("DB_PORT", default="5432"),
+    }
 }
 
 

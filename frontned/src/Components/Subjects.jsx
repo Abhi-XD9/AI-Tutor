@@ -248,7 +248,7 @@ const Subjects = () => {
         await axios.post(TOPICS_URL, topicForm, { headers: authHeader() })
         showStatus('success', 'Topic created', 'Your topic has been created successfully.')
         setTopicModal(null)
-        navigate(`/topics?subjectId=${topicForm.subject}`)
+        navigate(`/subjects/topics?subjectId=${topicForm.subject}`)
         return
       }
 
@@ -281,7 +281,7 @@ const Subjects = () => {
   if (error) return <p className="p-6 text-rose-500">{error}</p>
 
   return (
-<div className="min-h-screen  p-6">      {/* Header */}
+    <div className="min-h-screen  p-6">      {/* Header */}
       <div className="mb-8 flex items-center justify-between gap-4">
         <div>
           <h2 className="text-3xl font-bold tracking-tight text-slate-900">My Subjects</h2>

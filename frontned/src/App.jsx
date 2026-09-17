@@ -6,6 +6,7 @@ import TopbarLayout from './commonPages/TopbarLayout'
 import Dashboard from './Components/Dashboard'
 import Subjects from './Components/Subjects'
 import Topics from './Components/Topics'
+import { Documents } from './Components/Documents'
 
 
 function App() {
@@ -20,7 +21,8 @@ function App() {
           <Route element={<TopbarLayout />}>
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/subjects" element={<Subjects />} />
-            <Route path = 'subjects/topics' element = {<Topics/>}/>
+            <Route path='subjects/topics' element={<Topics />} />
+            <Route path='subjects/topics/documents' element={<Documents />} />
           </Route>
         </Route>
       </Routes>

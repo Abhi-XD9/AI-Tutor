@@ -17,8 +17,10 @@
     "react-data-table-component": "^8.8.0",
     "react-dom": "^19.2.7",
     "react-hook-form": "^7.81.0",
+    "react-markdown": "^10.1.0",
     "react-router-dom": "^7.18.1",
     "recharts": "^3.10.0",
+    "remark-gfm": "^4.0.1",
     "tailwindcss": "^4.3.2"
   },
   "devDependencies": {
