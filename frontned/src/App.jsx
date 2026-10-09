@@ -7,6 +7,7 @@ import Dashboard from './Components/Dashboard'
 import Subjects from './Components/Subjects'
 import Topics from './Components/Topics'
 import { Documents } from './Components/Documents'
+import Assessment from './Components/Assessment'
 
 
 function App() {
@@ -23,6 +24,7 @@ function App() {
             <Route path="/subjects" element={<Subjects />} />
             <Route path='subjects/topics' element={<Topics />} />
             <Route path='subjects/topics/documents' element={<Documents />} />
+            <Route path='subjects/topics/assessment' element={<Assessment />} />
           </Route>
         </Route>
       </Routes>

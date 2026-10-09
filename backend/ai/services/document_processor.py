@@ -1,7 +1,27 @@
 # ai/services/document_processor.py
-
+import io
+import os
 import re
 from pathlib import Path
+
+try:
+    import pypdfium2 as pdfium
+    _PDFIUM_AVAILABLE = True
+except ImportError:
+    _PDFIUM_AVAILABLE = False
+
+try:
+    import pytesseract
+    from PIL import Image
+    _OCR_AVAILABLE = True
+except ImportError:
+    _OCR_AVAILABLE = False
+
+# Configure tesseract binary path from environment if provided
+if _OCR_AVAILABLE:
+    _tess = os.environ.get("TESSERACT_CMD")
+    if _tess:
+        pytesseract.pytesseract.tesseract_cmd = _tess
 
 # pyrefly: ignore [missing-import]
 from langchain_community.document_loaders import (
@@ -9,7 +29,6 @@ from langchain_community.document_loaders import (
     TextLoader,
     CSVLoader,
     Docx2txtLoader,
-    JSONLoader,
 )
 
 # pyrefly: ignore [missing-import]
@@ -52,48 +71,50 @@ class DocumentProcessor:
 
     @staticmethod
     def extract(file_path: str):
-        """
-        Extract content from a supported file.
-
-        Args:
-            file_path:
-                Absolute or relative file path.
-
-        Returns:
-            List of LangChain Document objects.
-        """
-
         extension = Path(file_path).suffix.lower()
 
         if extension == ".pdf":
+            # Primary: PyPDFLoader for text-based PDFs
             loader = PyPDFLoader(file_path)
+            pages = loader.load()
+
+            # OCR fallback: for each page with very little text, render + OCR
+            if _PDFIUM_AVAILABLE and _OCR_AVAILABLE:
+                pdf = pdfium.PdfDocument(file_path)
+                enriched = []
+                for i, page_doc in enumerate(pages):
+                    text = page_doc.page_content or ""
+                    # If fewer than 80 chars on the page, it's likely image-only
+                    if len(text.strip()) < 80 and i < len(pdf):
+                        try:
+                            page = pdf[i]
+                            bitmap = page.render(scale=2.0)  # 2x for better OCR
+                            pil_image = bitmap.to_pil()
+                            ocr_text = pytesseract.image_to_string(pil_image, lang="eng")
+                            if ocr_text.strip():
+                                page_doc = Document(
+                                    page_content=ocr_text,
+                                    metadata={**page_doc.metadata, "ocr": True},
+                                )
+                        except Exception:
+                            pass
+                    enriched.append(page_doc)
+                pdf.close()
+                return enriched
+
+            return pages
 
         elif extension == ".txt":
-            loader = TextLoader(file_path)
-
+            return TextLoader(file_path).load()
         elif extension == ".csv":
-            loader = CSVLoader(file_path)
-
+            return CSVLoader(file_path).load()
         elif extension == ".docx":
-            loader = Docx2txtLoader(file_path)
-
+            return Docx2txtLoader(file_path).load()
         elif extension == ".xlsx":
-            loader = UnstructuredExcelLoader(file_path)
-
-        # Add JSON loader configuration when required.
-        # elif extension == ".json":
-        #     loader = JSONLoader(
-        #         file_path=file_path,
-        #         jq_schema=".",
-        #         text_content=False,
-        #     )
-
+            return UnstructuredExcelLoader(file_path).load()
         else:
-            raise ValueError(
-                f"Unsupported file type: {extension}"
-            )
+            raise ValueError(f"Unsupported file type: {extension}")
 
-        return loader.load()
 
     # --------------------------------------------------
     # Structure detection
@@ -211,6 +232,40 @@ class DocumentProcessor:
         save_current_section()
 
         return sections
+
+    @staticmethod
+    def extract_page_images(file_path: str):
+        """
+        Render each PDF page to a PIL image.
+        Returns list of dicts: {page_number, image (PIL), ocr_text}.
+        Used to store DocumentElement records with image assets.
+        """
+        if not _PDFIUM_AVAILABLE:
+            return []
+
+        results = []
+        try:
+            pdf = pdfium.PdfDocument(file_path)
+            for i in range(len(pdf)):
+                page = pdf[i]
+                bitmap = page.render(scale=2.0)
+                pil_image = bitmap.to_pil()
+                ocr_text = ""
+                if _OCR_AVAILABLE:
+                    try:
+                        ocr_text = pytesseract.image_to_string(pil_image, lang="eng")
+                    except Exception:
+                        pass
+                results.append({
+                    "page_number": i + 1,
+                    "image": pil_image,
+                    "ocr_text": ocr_text,
+                })
+            pdf.close()
+        except Exception:
+            pass
+        return results
+
 
     @classmethod
     def structure_documents(cls, documents, document_title):

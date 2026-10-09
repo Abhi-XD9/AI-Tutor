@@ -1,29 +1,28 @@
-"""Topic-wide retrieval helpers used by the assessment workflow.
+"""Topic-wide retrieval helpers used by the assessment workflow."""
 
-Assessment deliberately does not own another vector store. It reads the
-structured chunks created by ``ai.services`` and builds traceable syllabus
-context before question generation and feedback.
-"""
+from ai.services.okf import KnowledgeChunk, OpenKnowledgeFormat
 
-from ai.models import DocumentChunk
+
+_ChunkAdapter = KnowledgeChunk
 
 
 class AssessmentRetrievalService:
-    """Read all structured chunks for one topic, across every document."""
+    """Read all structured chunks for one topic, across every document source."""
 
     def __init__(self, topic_id):
         self.topic_id = topic_id
 
     def all_chunks(self):
-        return (
-            DocumentChunk.objects.filter(document__topic__topic_id=self.topic_id)
-            .select_related("document")
-            .order_by("document_id", "chunk_index", "id")
-        )
+        """
+        Return chunks in priority order:
+        1. Topic-level DocumentChunks (uploaded directly to the topic).
+        2. Subject-level ContentChunks mapped to this topic via TopicChunk.
+        3. All ContentChunks from the subject's source documents (fallback for
+           topics created from a proposal that have no TopicChunk mappings yet).
+        """
+        return OpenKnowledgeFormat.chunks_for_topic(self.topic_id)
 
     def get_structure(self):
-        """Return the available assessment scope grouped by document/section."""
-
         documents = {}
         for chunk in self.all_chunks():
             metadata = chunk.meta_data or {}
@@ -38,11 +37,9 @@ class AssessmentRetrievalService:
             chapter_title = metadata.get("chapter_title") or "Uncategorised"
             heading_title = metadata.get("heading_title") or "General"
             subheading_title = metadata.get("subheading_title") or "General"
-
             chapter = document["chapters"].setdefault(chapter_title, {})
             heading = chapter.setdefault(heading_title, {})
             heading.setdefault(subheading_title, []).append(chunk.id)
-
         return list(documents.values())
 
     def get_chapters(self, document_id=None):
@@ -51,32 +48,18 @@ class AssessmentRetrievalService:
         )
 
     def get_headings(self, chapter_title, document_id=None):
-        chunks = self.get_section_chunks(
-            chapter_title=chapter_title,
-            document_id=document_id,
-        )
+        chunks = self.get_section_chunks(chapter_title=chapter_title, document_id=document_id)
         return self._unique_metadata_values(chunks, "heading_title")
 
     def get_subheadings(self, chapter_title, heading_title, document_id=None):
         chunks = self.get_section_chunks(
-            chapter_title=chapter_title,
-            heading_title=heading_title,
-            document_id=document_id,
+            chapter_title=chapter_title, heading_title=heading_title, document_id=document_id
         )
         return self._unique_metadata_values(chunks, "subheading_title")
 
-    def get_section_chunks(
-        self,
-        chapter_title=None,
-        heading_title=None,
-        subheading_title=None,
-        document_id=None,
-    ):
-        """Return chunks for an optional document and section scope."""
-
+    def get_section_chunks(self, chapter_title=None, heading_title=None, subheading_title=None, document_id=None):
         chunks = self._filter_chunks(document_id=document_id)
-        matching_chunks = []
-
+        matching = []
         for chunk in chunks:
             metadata = chunk.meta_data or {}
             if chapter_title is not None and metadata.get("chapter_title") != chapter_title:
@@ -85,43 +68,36 @@ class AssessmentRetrievalService:
                 continue
             if subheading_title is not None and metadata.get("subheading_title") != subheading_title:
                 continue
-            matching_chunks.append(chunk)
-
-        return matching_chunks
+            matching.append(chunk)
+        return matching
 
     def build_context(self, chunks=None):
-        """Build labelled source context for question generation or feedback."""
-
         chunks = self.all_chunks() if chunks is None else chunks
         context_parts = []
-
         for chunk in chunks:
             metadata = chunk.meta_data or {}
             location = " > ".join(
-                value
-                for value in (
+                value for value in (
                     metadata.get("chapter_title"),
                     metadata.get("heading_title"),
                     metadata.get("subheading_title"),
-                )
-                if value
+                ) if value
             ) or "Uncategorised"
             context_parts.append(
-                "\n".join(
-                    (
-                        f"[chunk:{chunk.id}] {chunk.document.title}",
-                        f"Section: {location}",
-                        f"Pages: {self._page_range(metadata)}",
-                        f"Content: {chunk.chunk_text}",
-                    )
-                )
+                "\n".join((
+                    f"[chunk:{chunk.id}] {chunk.document.title}",
+                    f"Section: {location}",
+                    f"Pages: {self._page_range(metadata)}",
+                    f"Content: {chunk.chunk_text}",
+                ))
             )
-
         return "\n\n---\n\n".join(context_parts)
 
     def _filter_chunks(self, document_id=None):
         chunks = self.all_chunks()
-        return chunks.filter(document_id=document_id) if document_id else chunks
+        if document_id:
+            return [c for c in chunks if c.document_id == document_id]
+        return chunks
 
     @staticmethod
     def _unique_metadata_values(chunks, key):
