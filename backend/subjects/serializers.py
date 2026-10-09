@@ -3,10 +3,15 @@ from .models import Subject
 
 
 class SubjectSerializer(serializers.ModelSerializer):
+    source_document_count = serializers.SerializerMethodField()
+
     class Meta:
         model = Subject
         fields = '__all__'
         read_only_fields = ['created_by']
+
+    def get_source_document_count(self, subject):
+        return subject.source_documents.count()
 
     def validate_name(self, value):
             value = value.strip().lower()

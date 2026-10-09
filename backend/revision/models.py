@@ -47,3 +47,16 @@ class RevisionSchedule(models.Model):
 
     def __str__(self):
         return f"{self.topic.title} - Revision {self.revision_number}"
+
+
+class TopicRevisionPlan(models.Model):
+    """Cumulative revision guidance generated from completed assessments."""
+
+    topic = models.OneToOneField(
+        Topic,
+        on_delete=models.CASCADE,
+        related_name="revision_plan",
+    )
+    plan = models.JSONField(default=dict, blank=True)
+    generated_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
